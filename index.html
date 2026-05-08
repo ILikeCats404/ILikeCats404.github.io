@@ -1,53 +1,218 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Fixed Mic Pipeline</title>
-</head>
+<style>
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(
+            135deg,
+            #5b0017 0%,
+            #8b0000 25%,
+            #4b0082 60%,
+            #0f172a 100%
+        );
+        background-attachment: fixed;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+    }
 
-<body style="background:#111;color:white;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column">
+    .hero {
+        text-align: center;
+        padding: 40px 20px;
+    }
 
-<button id="start">Start Mic</button>
-<div id="status">Idle</div>
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.15);
+        }
 
-<script>
-let ctx;
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            color: #ffffff;
+        }
 
-document.getElementById("start").onclick = async () => {
-  const status = document.getElementById("status");
+    .card {
+        background: rgba(30, 30, 30, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+        max-width: 700px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+        color: #ffffff;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-  try {
-    status.textContent = "Creating audio context...";
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+        }
 
-    ctx = new AudioContext({ sampleRate: 48000 });
+        .card h2 {
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
 
-    await ctx.resume(); // 🔥 CRITICAL FIX
+    a {
+        color: #7bd7ff;
+    }
 
-    status.textContent = "Requesting mic...";
+        a:hover {
+            text-decoration: underline;
+        }
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true
-    });
+    .button-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 20px;
+    }
 
-    const source = ctx.createMediaStreamSource(stream);
+    .big-button {
+        flex: 1 1 250px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+        border-radius: 14px;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: white;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
 
-    // Simple guaranteed working output first (NO RNNOISE YET)
-    const gain = ctx.createGain();
-    gain.gain.value = 1.0;
+        .big-button:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-2px) scale(1.02);
+            text-decoration: none;
+        }
 
-    source.connect(gain);
-    gain.connect(ctx.destination);
+    .button-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
 
-    status.textContent = "MIC ACTIVE (loopback working)";
+        .button-icon img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
 
-    console.log("Audio pipeline running");
+        .button-icon.minecraft img {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            border-radius: 10px;
+        }
 
-  } catch (err) {
-    console.error(err);
-    status.textContent = "ERROR: " + err.message;
-  }
-};
-</script>
+    .button-text {
+        display: flex;
+        flex-direction: column;
+    }
 
-</body>
-</html>
+        .button-text strong {
+            font-size: 1rem;
+        }
+
+        .button-text span {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+</style>
+
+<div class="hero">
+    <h1>Welcome to TimberDev.me</h1>
+    <p>Crafted with code, curiosity, and cats 🐾</p>
+</div>
+
+<div class="card">
+    <h2>About Timber</h2>
+    <p>
+        Hi! I'm <strong>Timber</strong>, and I go by <strong>timber</strong> pretty much everywhere.
+        Online you might know me as <strong>ILikeCats404</strong> on Discord.
+    </p>
+    <p>
+        I love building things — apps, tools, whatever I dream up — mainly using <strong>C#</strong> and <strong>C++</strong>.
+        I also mess around with web stuff and Minecraft-related scripting.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Projects</h2>
+    <p>
+        I run the BambooCraftMC website:
+        <a href="https://web.bamboocraftmc.net" target="_blank">web.bamboocraftmc.net</a>
+    </p>
+    <p>It's a showcase of some of my Minecraft server BambooCraftMC.</p>
+</div>
+
+<div class="card">
+    <h2>Current Projects</h2>
+
+    <div class="button-grid">
+
+        <a class="big-button" href="https://www.outlandsmc.net" target="_blank">
+            <div class="button-icon minecraft">
+                <img src="https://web.outlandsmc.net/icon.png" alt="Terracotta Block">
+            </div>
+            <div class="button-text">
+                <strong>OutlandsMC</strong>
+                <span>www.outlandsmc.net</span>
+            </div>
+        </a>
+
+        <a class="big-button" href="https://discord.gg/7EVV8ZfkjJ" target="_blank">
+            <div class="button-icon">
+                <img src="https://www.timberdev.me/discord-color-icon.png" alt="Discord Logo">
+            </div>
+            <div class="button-text">
+                <strong>Project Hub</strong>
+                <span>Join the Discord community</span>
+            </div>
+        </a>
+
+        <a class="big-button" href="https://discord.com/users/ILikeCats404" target="_blank">
+            <div class="button-icon">
+                <img src="https://www.timberdev.me/discord-color-icon.png" alt="Discord Logo">
+            </div>
+            <div class="button-text">
+                <strong>Discord</strong>
+                <span>@ILikeCats404</span>
+            </div>
+        </a>
+
+        <a class="big-button" href="https://github.com/ILikeCats404" target="_blank">
+            <div class="button-icon">
+                <img src="https://github.com/favicon.ico" alt="GitHub Logo">
+            </div>
+            <div class="button-text">
+                <strong>GitHub</strong>
+                <span>github.com/ILikeCats404</span>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+<div class="card">
+    <h2>More Soon</h2>
+    <p>
+        This site is growing — new tools, pages, and experiments will show up here over time.
+        Check back whenever you're curious!
+        If you want to beta test features join my Project hub on
+        <a href="https://discord.gg/7EVV8ZfkjJ" target="_blank">Discord</a>
+    </p>
+</div>
